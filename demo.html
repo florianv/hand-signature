@@ -1,0 +1,48 @@
+<!--
+This file is part of hand-signature.
+
+(c) Florian Voutzinos <florian@voutzinos.com>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+-->
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>hand-signature demo</title>
+
+    <script src="../platform/platform.js"></script>
+</head>
+<body unresolved>
+
+<link rel="import" href="hand-signature.html">
+
+<polymer-element name="hand-signature-demo">
+    <template>
+        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto' type='text/css'>
+
+        <hand-signature data="{{signature}}">
+            <h1>Please sign below</h1>
+        </hand-signature>
+    </template>
+
+    <style>
+        hand-signature-demo {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+
+    <script>
+        Polymer('hand-signature-demo', {
+            signatureChanged: function (oldValue, newValue) {
+                console.log(newValue);
+            }
+        });
+    </script>
+</polymer-element>
+
+<hand-signature-demo></hand-signature-demo>
+
+</body>
+</html>

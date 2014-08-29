@@ -1,0 +1,48 @@
+/*
+ * This file is part of hand-signature.
+ *
+ * (c) Florian Voutzinos <florian@voutzinos.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+#box {
+    border: 1px solid #EEEEEE;
+    color: white;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+#signature {
+    float: left;
+}
+
+header {
+    text-align: center;
+    background-color: #00BAD2;
+}
+
+::content h1 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+    padding: 20px;
+}
+
+footer {
+    background-color: #EEEEEE;
+    text-align: center;
+}
+
+footer button {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #F39C12;
+    cursor: pointer;
+}
+
+footer button:hover {
+    color: #D35400;
+}
