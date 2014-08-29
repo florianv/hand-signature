@@ -1,6 +1,6 @@
 # hand-signature
 
-> Polymer element for hand signatures
+> Polymer element for handwritten signatures
 
 ## Installation
 

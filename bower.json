@@ -8,11 +8,11 @@
       "homepage": "http://florian.voutzinos.com"
     }
   ],
-  "description": "Polymer element for user signatures",
+  "description": "Polymer element for handwritten signatures",
   "keywords": "user, signature, polymer, web-components",
   "main": "hand-signature.html",
   "license": "MIT",
-  "homepage": "https://github.com/florianv/signature",
+  "homepage": "https://github.com/florianv/hand-signature",
   "ignore": [
     "**/.*"
   ],
