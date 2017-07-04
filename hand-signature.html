@@ -150,7 +150,6 @@ Web Component for handwritten signatures.
                         break;
 
                     case 'track':
-                        //console.log('Tracking in progress... ' + e.detail.x + ', ' + e.detail.y);
                         var rect = this.$.signature.getBoundingClientRect();
                         var mouseX = e.detail.x - rect.left;
                         var mouseY = e.detail.y - rect.top;
