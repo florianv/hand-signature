@@ -17,8 +17,7 @@ Web Component for handwritten signatures.
 @status alpha
 @homepage https://github.com/florianv/hand-signature
 -->
-<polymer-element name="hand-signature" attributes="width height lineColor lineJoin lineWidth backgroundColor clearable format data">
-
+<dom-module id="hand-signature">
     <template>
 
         <link rel="stylesheet" href="hand-signature.css"/>
@@ -30,13 +29,7 @@ Web Component for handwritten signatures.
 
             <canvas
                 id="signature"
-                width="{{width}}"
-                height="{{height}}"
-                on-mousedown="{{onMouseDown}}"
-                on-mousemove="{{onSign}}"
-                on-mouseup="{{onStopSign}}"
-                on-mouseleave="{{onStopSign}}"
-                >
+                on-track="onTrack">
             </canvas>
 
             <template if="{{clearable}}">
@@ -49,177 +42,187 @@ Web Component for handwritten signatures.
     </template>
 
     <script>
-        (function () {
+        Polymer({
+            is:'hand-signature',
 
-            Polymer('hand-signature', {
-
+            properties:{
                 /**
                  * Width of the element and canvas.
-                 *
-                 * @attribute width
-                 * @type string
                  */
-                width: '300px',
+                width: {
+                    type: String,
+                    value: '300px',
+                    notify: true
+                },
 
                 /**
                  * Height of the canvas.
-                 *
-                 * @attribute height
-                 * @type string
                  */
-                height: '200px',
+                height: {
+                    type: String,
+                    value: '200px',
+                    notify: true
+                },
 
                 /**
                  * The line color.
-                 *
-                 * @attribute lineColor
-                 * @type string
                  */
-                lineColor: '#212121',
+                lineColor: {
+                    type: String,
+                    value: '#212121'
+                },
 
                 /**
                  * The line join.
                  * Possible values: bevel, round, miter.
-                 *
-                 * @attribute lineJoin
-                 * @type string
                  */
-                lineJoin: 'miter',
+                lineJoin: {
+                    type: String,
+                    value: 'miter'
+                },
 
                 /**
                  * The line width.
-                 *
-                 * @attribute lineWidth
-                 * @type number
                  */
-                lineWidth: 2,
+                lineWidth: {
+                    type: Number,
+                    value: 2
+                },
 
                 /**
                  * The canvas background color.
-                 *
-                 * @attribute backgroundColor
-                 * @type string
                  */
-                backgroundColor: '#FFFFFF',
+                backgroundColor: {
+                    type: String,
+                    value: '#FFFFFF'
+                },
 
                 /**
                  * True if the signature can be cleared.
-                 *
-                 * @attribute clearable
-                 * @type boolean
                  */
-                clearable: true,
+                clearable: {
+                    type: Boolean,
+                    value: true
+                },
 
                 /**
                  * The image format.
-                 *
-                 * @attribute format
-                 * @type string
                  */
-                format: 'png',
+                format: {
+                    type: String,
+                    value: 'png'
+                },
 
                 /**
                  * The image data.
-                 *
-                 * @attribute data
-                 * @type string
                  */
-                data: null,
-
-                created: function () {
-                    this.signing = false;
-                    this.lines = [];
-                },
-
-                ready: function () {
-                    this.context = this.$.signature.getContext('2d');
-                    this.context.strokeStyle = this.lineColor;
-                    this.context.fillStyle = this.backgroundColor;
-                    this.context.lineJoin = this.lineJoin;
-                    this.context.lineWidth = this.lineWidth;
-                    this.$.box.style.width = this.width;
-
-                    this.fillBackground();
-                },
-
-                onMouseDown: function () {
-                    this.signing = true;
-                    this.lines.push([]);
-                },
-
-                onSign: function (event) {
-                    var mouseX = event.pageX - this.$.signature.offsetLeft;
-                    var mouseY = event.pageY - this.$.signature.offsetTop;
-
-                    if (this.signing) {
-                        this.lines[this.lines.length - 1].push({
-                            x: mouseX,
-                            y: mouseY
-                        });
-
-                        this.doDraw();
-                        this.updateData();
-                    }
-                },
-
-                doDraw: function () {
-                    for (var i = 0; i < this.lines.length; i++) {
-                        var points = this.lines[i];
-
-                        this.context.beginPath();
-
-                        for (var j = 0; j < points.length; j++) {
-                            var previousPoint = j > 0 ? points[j - 1] : null;
-                            var currentPoint = points[j];
-
-                            this.context.moveTo(currentPoint.x, currentPoint.y);
-
-                            if (previousPoint) {
-                                this.context.lineTo(previousPoint.x, previousPoint.y);
-                            }
-                        }
-
-                        this.context.closePath();
-                        this.context.stroke();
-                    }
-                },
-
-                onStopSign: function () {
-                    this.signing = false;
-                    this.lines.push([]);
-                },
-
-                clear: function () {
-                    this.context.clearRect(0, 0, this.getWithWithoutUnit(), this.getHeightWithoutUnit());
-                    this.lines = [];
-                    this.fillBackground();
-                },
-
-                fillBackground: function () {
-                    this.context.fillRect(0, 0, this.getWithWithoutUnit(), this.getHeightWithoutUnit());
-                },
-
-                updateData: function () {
-                    var format = 'image/' + this.format;
-                    var dataUrl = this.$.signature.toDataURL(format);
-
-                    if (0 === dataUrl.indexOf('data:image/png') && 'image/png' !== format) {
-                        throw new Error('The format "' + this.format + '" is not supported');
-                    }
-
-                    this.data = dataUrl.slice(dataUrl.indexOf(',') + 1);
-                },
-
-                getHeightWithoutUnit: function () {
-                    return parseInt(this.height.slice(0, this.height.indexOf('px')));
-                },
-
-                getWithWithoutUnit: function () {
-                    return parseInt(this.width.slice(0, this.width.indexOf('px')));
+                data: {
+                    type: String,
+                    value: null,
+                    notify: true
                 }
-            });
+            },
 
-        })();
+            created: function () {
+                this.signing = false;
+                this.lines = [];
+            },
+
+            attached: function () {
+                this.$.signature.width = this.getWidthWithoutUnit();
+                this.$.signature.height = this.getHeightWithoutUnit();
+
+                this.context = this.$.signature.getContext('2d');
+                this.context.strokeStyle = this.lineColor;
+                this.context.fillStyle = this.backgroundColor;
+                this.context.lineJoin = this.lineJoin;
+                this.context.lineWidth = this.lineWidth;
+                this.$.box.style.width = this.width;
+
+                this.fillBackground();
+            },
+
+            onTrack: function(e) {
+                switch(e.detail.state) {
+                    case 'start':
+                        this.signing = true;
+                        this.lines.push([]);
+                        break;
+
+                    case 'track':
+                        var rect = this.$.signature.getBoundingClientRect();
+                        var mouseX = e.detail.x - rect.left;
+                        var mouseY = e.detail.y - rect.top;
+
+                        if (this.signing) {
+                            this.lines[this.lines.length - 1].push({
+                                x: mouseX,
+                                y: mouseY
+                            });
+
+                            this.doDraw();
+                            this.updateData();
+                        }
+                        break;
+
+                    case 'end':
+                        this.signing = false;
+                        this.lines.push([]);
+                        break;
+                }
+            },
+
+            doDraw: function () {
+                for (var i = 0; i < this.lines.length; i++) {
+                    var points = this.lines[i];
+
+                    this.context.beginPath();
+
+                    for (var j = 0; j < points.length; j++) {
+                        var previousPoint = j > 0 ? points[j - 1] : null;
+                        var currentPoint = points[j];
+
+                        this.context.moveTo(currentPoint.x, currentPoint.y);
+
+                        if (previousPoint) {
+                            this.context.lineTo(previousPoint.x, previousPoint.y);
+                        }
+                    }
+                    this.context.closePath();
+                    this.context.stroke();
+                }
+            },
+
+            clear: function () {
+                this.context.clearRect(0, 0, this.getWidthWithoutUnit(), this.getHeightWithoutUnit());
+                this.lines = [];
+                this.fillBackground();
+            },
+
+            fillBackground: function () {
+                this.context.fillRect(0, 0, this.getWidthWithoutUnit(), this.getHeightWithoutUnit());
+            },
+
+            updateData: function () {
+                var format = 'image/' + this.format;
+                var dataUrl = this.$.signature.toDataURL(format);
+
+                if (0 === dataUrl.indexOf('data:image/png') && 'image/png' !== format) {
+                    throw new Error('The format "' + this.format + '" is not supported');
+                }
+
+                this.data = dataUrl.slice(dataUrl.indexOf(',') + 1);
+            },
+
+            getHeightWithoutUnit: function () {
+                return parseInt(this.height.slice(0, this.height.indexOf('px')));
+            },
+
+            getWidthWithoutUnit: function () {
+                return parseInt(this.width.slice(0, this.width.indexOf('px')));
+            }
+        });
+
     </script>
 
-</polymer-element>
+</dom-module>

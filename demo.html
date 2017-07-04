@@ -6,43 +6,20 @@ This file is part of hand-signature.
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 -->
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<head lang="en">
+    <meta charset="UTF-8">
     <title>hand-signature demo</title>
-
-    <script src="../platform/platform.js"></script>
+    <link  rel="import" href="/bower_components/polymer/polymer.html">
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="hand-signature.html">
 </head>
-<body unresolved>
-
-<link rel="import" href="hand-signature.html">
-
-<polymer-element name="hand-signature-demo">
-    <template>
-        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto' type='text/css'>
-
-        <hand-signature data="{{signature}}">
-            <h1>Please sign below</h1>
-        </hand-signature>
-    </template>
-
-    <style>
-        hand-signature-demo {
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
-
-    <script>
-        Polymer('hand-signature-demo', {
-            signatureChanged: function (oldValue, newValue) {
-                console.log(newValue);
-            }
-        });
-    </script>
-</polymer-element>
-
-<hand-signature-demo></hand-signature-demo>
-
-</body>
+    <body>
+        <template is="dom-bind">
+            <hand-signature data="{{signature}}">
+                <h1>Please sign below</h1>
+            </hand-signature>
+        </template>
+    </body>
 </html>
